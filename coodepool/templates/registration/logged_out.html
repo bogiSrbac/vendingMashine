@@ -1,0 +1,6 @@
+{% extends "vendingMashine/products.html" %}
+
+{% block logout %}
+  <p>Logged out!</p>  
+  <a href="{% url 'login'%}">Log in again.</a>
+{% endblock %}

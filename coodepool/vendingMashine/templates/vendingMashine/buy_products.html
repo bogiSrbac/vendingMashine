@@ -1,0 +1,75 @@
+{% extends 'vendingMashine/products.html' %}
+{% load static %}
+  {% load crispy_forms_tags %}
+{% block products %}
+
+    {#    modal #}
+    <div class="modal" tabindex="-1" role="dialog" id="myModalBuy">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Buy this product</h5>
+        <button type="button" class="close3" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-left">
+        <h5 id="error-text1" class="text-warning"></h5>
+          <h5 id="success-text1"></h5>
+
+            {#  form part   #}
+          <div class="container-fluid" id="updateFormModal">
+              <h4 id="insertProductName" class="text-secondary"></h4>
+              <p id="pk" style="display: none"></p>
+              <form method="post" id="formBuy">
+                  {% csrf_token %}
+
+                        <div class="form-group mb-0">
+                            {{ form.amount|as_crispy_field }}
+                        </div>
+
+                    <button type="submit" class="btn btn-primary align-self-start mb-4" id="buyProductButton">Buy product</button>
+                </form>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary close4" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{#  modal end #}
+    {% if products %}
+        {% if idCurrentUser %}<p id="getUserIdBuy" style="display: none">{{ idCurrentUser }}</p>{% endif %}
+
+    <div class="container">
+    <h4 class="text-success">All products</h4>
+    <div class="container-fluid d-md-flex flex-row flex-lg-start flex-md-wrap overflow-auto" id="addPurchases" style="height: calc(100vh - 215px)">
+        {% for product in products %}
+            <div class="container text-left border border-secondary rounded mb-2 align-items-start buyProductClass overflow-auto" style="width: 17rem; height:20rem">
+            <p class="getProductId" style="display: none">{{ product.pk }}</p>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Product name: {{ product.productName }}</li>
+                  <li class="list-group-item">Seller: {{ product.user_product.username }}</li>
+                  <li class="list-group-item">Amount available: {{ product.amountAvailable }}</li>
+                  <li class="list-group-item">Cost: {{ product.cost }}</li>
+            </ul>
+            </div>
+
+
+
+        {% endfor %}
+
+
+
+
+
+    </div>
+        </div>
+
+{% endif %}
+    <script src="{% static 'js/buyProductSCript.js' %}"></script>
+{% endblock %}
+
+

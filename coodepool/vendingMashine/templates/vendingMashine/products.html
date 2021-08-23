@@ -1,0 +1,93 @@
+<!doctype html>
+{% load static %}
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <title>VENDING MASHINE</title>
+  </head>
+  <body>
+  {% load crispy_forms_tags %}
+
+<nav class="navbar navbar-expand-md navbar-light bg-light fixed-top mb-5">
+    <a href="" class="navbar-brand ml-5">VENDING MASHINE</a>
+    <button class="navbar-toggler" data-toggle="collapse" data-target="#myNavbar1">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-center" id="myNavbar1">
+        <ul class="navbar-nav">
+        <li class="nav-item">
+                <a href="{% url 'vendingMashine:all-products' %}" class="nav-link active">Products</a>
+            </li>
+            <li class="nav-item">
+
+                {% if user.is_authenticated %}
+
+                <a href="{% url 'vendingMashine:index' %}" class="nav-link active">{% if 'buyer' == user.role %}Buyer{% else %}Seller{% endif %}</a>
+
+
+                {% endif %}
+            </li>
+
+            <li class="nav-item">
+                {% if user.is_authenticated %}
+                    {% if user.is_admin %}
+                     <a href="{% url 'admin:index' %}" class="nav-link">API</a>
+                        {% endif %}
+                {% endif %}
+            </li>
+        <li class="nav-item user-loged">
+            {% if user.is_active %}
+                <p>Currently loged in: <span class="text-success">{{ user.username }}</span> Deposit: <span class="text-danger" id="navBarDeposit">{{ user.deposit }} coins</span></p>
+                        {% endif %}
+        </li>
+        </ul>
+{#                <div class="d-none d-md-block seperator navbar-text pb-3 ml-2">|</div>#}
+     <ul class="navbar-nav">
+                 {% if user.is_authenticated %}
+                     <li class="nav-item">
+                    <a class="nav-link pb-3" href="{% url 'logout' %}?next={{ request.path }}" style="color: #ff6f00">Log out</a>
+                     </li>
+                {% else %}
+                     <li class="nav-item">
+                    <a id="link-login" class="nav-link" href="{% url 'login' %}?next={{ request.path }}" style="color: #999999">Log in</a>
+                     </li>
+                     <li class="nav-item">
+                     <a class="nav-link pb-2" href="{% url 'vendingMashine:registration' %}" style="color: #999999">Register</a>
+                     </li>
+                {% endif %}
+     </ul>
+
+    </div>
+</nav>
+
+
+<div class="container-fluid text-center">
+    <h4 class="display-4 text-success" style="margin-top: 5rem">VENDING MASHINE</h4>
+{% if user.is_authenticated %}
+    {% block seller_buyer %}{% endblock %}
+{% endif %}
+    {% block products %}{% endblock %}
+    {% block login %}{% endblock %}
+    {% block logout %}{% endblock %}
+    {% block registration %}{% endblock %}
+
+</div>
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>
+
+
+  </body>
+</html>

@@ -1,0 +1,145 @@
+{% extends 'vendingMashine/products.html' %}
+{% load static %}
+  {% load crispy_forms_tags %}
+{% block seller_buyer %}
+{% if idCurrentUser %}<p id="getUserId" style="display: none">{{ idCurrentUser }}</p>{% endif %}
+{#    modal #}
+    <div class="modal" tabindex="-1" role="dialog" id="myModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">New product inserted by {{ user.username }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-left">
+        <h5 id="error-text" class="text-warning"></h5>
+          <h5 id="success-text"></h5>
+          <div class="container-fluid" id="available-dates"></div>
+            {#  form part   #}
+          <div class="container-fluid" id="updateFormModal">
+              <form method="post" id="formUpdateProduct">
+                {% csrf_token %}
+
+                        <div class="form-group mb-0">
+                            {{ formUpdate.productName|as_crispy_field }}
+                        </div>
+
+
+                        <div class="form-group mb-0">
+                             {{formUpdate.amountAvailable|as_crispy_field }}
+                        </div>
+
+
+                        <div class="form-group mb-0">
+                            {{ formUpdate.cost|as_crispy_field }}
+                        </div>
+
+                    <button type="submit" class="btn btn-primary align-self-start mb-4" id="updateProduct">Submit</button>
+                </form>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary close2" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{#  modal end #}
+
+{#        seller form ad functions  #}
+    {% if currentUser.role == 'seller' %}
+
+        <div class="row text-left pl-4 pr-4">
+                    <p id="hiddenProdutct" style="display: none">1</p>
+
+            <div class="col-lg-4 border border-secondary rounded mb-4">
+                    <h5>Enter new product</h5>
+             <form method="post" id="formAddProduct">
+                {% csrf_token %}
+                         <div class="form-group mb-0">
+                            {{ form.user_product|as_crispy_field }}
+                        </div>
+                        <div class="form-group mb-0">
+                            {{ form.productName|as_crispy_field }}
+                        </div>
+
+
+                        <div class="form-group mb-0">
+                             {{form.amountAvailable|as_crispy_field }}
+                        </div>
+
+
+                        <div class="form-group mb-0">
+                            {{ form.cost|as_crispy_field }}
+                        </div>
+
+                    <button type="submit" class="btn btn-primary align-self-start mb-4" id="submitProduct">Submit</button>
+                </form>
+            </div>
+            <div class="col-lg-7 border border-secondary rounded mb-4 offset-lg-1">
+                <h4 class="text-primary">All produkts of user <span class="text-danger">{{ user.username }}</span></h4>
+                <div class="container-fluid overflow-auto border border-secondary rounded mb-4" style="height: 25rem">
+                    <ul class="list-group list-group-flush" id="loopUserProducts">
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% else %}
+{#  deposit form      #}
+    <div class="row">
+        <div class="col-lg-3 offset-lg-2 text-left">
+            <p id="hiddenProdutct" style="display: none">2</p>
+            <h4 class="text-success">Insert new deposit</h4>
+            <div class="container-fluid border border-secondary rounded mb-4 p-2">
+
+                    <form method="post" id="formInsertDeposit">
+                {% csrf_token %}
+
+                        <div class="form-group mb-0">
+                            {{ formDeposit.user_deposit|as_crispy_field }}
+                        </div>
+
+
+                        <div class="form-group mb-0">
+                             {{formDeposit.add_deposit|as_crispy_field }}
+                        </div>
+
+                    <button type="submit" class="btn btn-primary align-self-start mb-4" id="setNewDepButton">Submit</button>
+                </form>
+            </div>
+        {#  end deposit form part   #}
+
+        {#  withdraw deposit part   #}
+        <div class="container border border-secondary rounded mb-4">
+            <h4 class="text-danger pt-2">Withdraw deposit <button type="button" class="btn btn-outline-primary btn-sm" id="resetDeposit">RESET</button></h4>
+            <div class="container overflow-auto p-2 border border-secondary rounded mb-4" style="height: 14rem">
+                <ul class="list-group" id="list-group">
+
+
+                </ul>
+            </div>
+
+        </div>
+        </div>
+        <div class="col-lg-6 offset-lg-1 text-left">
+            <h4 class="text-success">All purchases by {{ user.username }}</h4>
+                <div class="container text-left overflow-auto p-2 border border-secondary rounded" style="height: 25rem">
+                    <ul class="list-group list-group-flush">
+                        {% for purch in purchases %}
+                            <li class="list-group-item">Product: {{ purch.product_name.productName }} amount: {{ purch.amount }} cost: {{ purch.cost }} coins</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+        </div>
+    </div>
+{# end of deposit form#}
+{% endif %}
+    <script src="{% static 'js/addProductScript.js' %}"></script>
+    <script src="{% static 'js/allUsersProducts.js' %}"></script>
+    <script src="{% static 'js/setNewDeposit.js' %}"></script>
+    <script src="{% static 'js/withdrawDeposit.js' %}"></script>
+{% endblock %}
